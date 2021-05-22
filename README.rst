@@ -1,1 +1,0 @@
-Imake is a command line tool to simplify commands in Python projects, discarding the usability of a Makefile file.
