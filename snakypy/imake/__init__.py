@@ -1,3 +1,17 @@
+"""
+Imake
+~~~~~~~~
+
+Imake is a command line tool to simplify commands in Python projects, discarding the
+usability of a Makefile file
+
+
+For more information, access: 'https://github.com/snakypy/imake'
+
+:copyright: Copyright 2021-2021 by Snakypy team, see AUTHORS.
+:license: MIT license, see LICENSE for details.
+"""
+
 import argparse
 from contextlib import suppress
 from os import getcwd, system
@@ -5,6 +19,7 @@ from os.path import join
 from sys import exit
 
 from snakypy.helpers import FG, NONE, printer
+from snakypy.helpers.decorators import denying_os
 from snakypy.helpers.files import read_file
 from tomlkit import parse
 from tomlkit.exceptions import NonExistentKey, ParseError
@@ -15,7 +30,7 @@ class Base:
     INFO = {
         "name": "Imake",
         "configuration_file": ".imake",
-        "version": "0.1.0",
+        "version": "0.1.0a2",
     }
 
 
@@ -71,6 +86,7 @@ class Imake(Base):
         return args
 
 
+@denying_os("nt")
 def main():
     with suppress(TypeError):
         imake = Imake()
