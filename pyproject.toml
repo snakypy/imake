@@ -1,0 +1,73 @@
+[tool.poetry]
+name = "imake"
+version = "0.1.0"
+description = ""
+authors = ["William C. Canin <william.costa.canin@gmail.com>"]
+readme = "README.rst"
+license = "MIT"
+keywords=["snakypy", "makefile", "make", "imake"]
+homepage = "https://github.com/snakypy/imake"
+repository = "https://github.com/snakypy/imake"
+include = ["LICENSE"]
+
+packages = [
+    { include = "snakypy" }
+]
+
+[tool.poetry.scripts]
+imake = "snakypy.imake:main"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+tomlkit = "^0.7.2"
+snakypy-helpers = "^0.1.4"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2"
+black = "^21.5b1"
+isort = "^5.8.0"
+mypy = "^0.812"
+flake8 = "^3.9.2"
+tox = "^3.23.1"
+
+[tool.black]
+line-length = 88
+include = '\.pyi?$'
+exclude = '''
+
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.hg
+    | \.mypy_cache
+    | \.pytest_cache
+    | \.tox
+    | \venv
+    | build
+    | venv
+    | dist
+    | docs
+    | tmp
+  )/
+)
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+src_paths = ["snakypy", "tests"]
+line_length = 88
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+cache_dir = "/tmp/.pytest_cache"
+# addopts = "-ra -q"
+testpaths = ["tests"]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
