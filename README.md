@@ -1,6 +1,15 @@
 # iMake
 
-[![Tests](https://github.com/snakypy/imake/actions/workflows/tests.yml/badge.svg)](https://github.com/snakypy/imake/actions/workflows/tests.yml)[![Python Versions](https://img.shields.io/pypi/pyversions/imake)](https://pyup.io/repos/github/snakypy/imake/)[![Python Whell](https://img.shields.io/pypi/wheel/imake)](https://pypi.org/project/wheel/)[![PyPI](https://img.shields.io/pypi/v/imake)](https://pypi.org/project/imake/#history)[![PyPI - Implementation](https://img.shields.io/pypi/implementation/imake)](https://pypi.org/project/imake)[![Isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)[![Mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)[![Code style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)[![PyPI - Downloads](https://img.shields.io/pypi/dm/imake)](https://pypi.org/project/imake/#files)[![GitHub license](https://img.shields.io/github/license/snakypy/imake)](https://github.com/snakypy/imake/blob/master/LICENSE)
+[![Tests](https://github.com/snakypy/imake/actions/workflows/tests.yml/badge.svg)](https://github.com/snakypy/imake/actions/workflows/tests.yml)
+[![Python Versions](https://img.shields.io/pypi/pyversions/imake)](https://pyup.io/repos/github/snakypy/imake/)
+[![Python Whell](https://img.shields.io/pypi/wheel/imake)](https://pypi.org/project/wheel/)
+[![PyPI](https://img.shields.io/pypi/v/imake)](https://pypi.org/project/imake/#history)
+[![PyPI - Implementation](https://img.shields.io/pypi/implementation/imake)](https://pypi.org/project/imake)
+[![Isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)
+[![Mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
+[![Code style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/imake)](https://pypi.org/project/imake/#files)
+[![GitHub license](https://img.shields.io/github/license/snakypy/imake)](https://github.com/snakypy/imake/blob/master/LICENSE)
 
 ----------------
 <div align="center">
@@ -8,6 +17,7 @@
     <a href="#requirements">Requirements</a> |
     <a href="#installing">Install</a> |
     <a href="#configuration">Configuration</a> |
+    <a href="#using">Using</a> |
     <a href="#donation">Donation</a> |
   </h4>
   <h5>
