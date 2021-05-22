@@ -80,11 +80,11 @@ You can also execute commands in blocks instead of a list, as follows using trip
 ```toml
 [clean]
 commands = ["""
-if [[ -d "build" ]]; then
-  rm -r build;
-fi
-rm -rf docs/_build;
-rm -rf .pytest_cache;
+            if [[ -d "build" ]]; then
+              rm -r build;
+            fi
+            rm -rf docs/_build;
+            rm -rf .pytest_cache;
 """]
 ```
 
