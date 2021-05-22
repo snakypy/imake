@@ -133,13 +133,13 @@ Notice that the command **imake clean -q** is inside **commands**. Where the `-q
 
 ## Using
 
-After making the settings in the file **.imake **, execute the command **imake** followed by the primary key, which in our example is **build**. It will look like this:
+After making the settings in the file **.imake**, execute the command **imake** followed by the primary key, which in our example is **build**. It will look like this:
 
 ```shell
 $ imake build
 ```
 
-You can run the help command, `imake -h` to show which commands are available to you. Any configuration that is in the **.imake ** file will be shown in `help`, minus the description of each command, which will be shown only if you run the `--desc` or `-d` option, for example:
+You can run the help command, `imake -h` to show which commands are available to you. Any configuration that is in the **.imake** file will be shown in `help`, minus the description of each command, which will be shown only if you run the `--desc` or `-d` option, for example:
 
 ```shell
 $ imake build --desc 
