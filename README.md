@@ -139,7 +139,7 @@ After making the settings in the file **.imake **, execute the command **imake**
 $ imake build
 ```
 
-You can run the help command, `imake -h` to show which commands are available to you. Any configuration that is in the **.imake ** file will be shown in `help`, minus the description of each command, which will be shown only if you run the` --desc` or `-d` option, for example:
+You can run the help command, `imake -h` to show which commands are available to you. Any configuration that is in the **.imake ** file will be shown in `help`, minus the description of each command, which will be shown only if you run the `--desc` or `-d` option, for example:
 
 ```shell
 $ imake build --desc 
