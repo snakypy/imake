@@ -48,7 +48,7 @@ class Imake(Base):
             usage = f"[{', '.join([f'{args} [--desc]' for args in self.config_toml])}, version]"
             command_help = f"[{FG().BLUE}{', '.join([args for args in self.config_toml])}, version{NONE}]"
         else:
-            usage = f"[version]"
+            usage = "[version]"
             command_help = f"[{FG().BLUE}version{NONE}]"
 
         parser = argparse.ArgumentParser(
