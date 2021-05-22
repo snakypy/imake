@@ -13,10 +13,13 @@ For more information, access: 'https://github.com/snakypy/imake'
 """
 
 import argparse
+from argparse import RawTextHelpFormatter
 from contextlib import suppress
 from os import getcwd, system
 from os.path import join
+from time import strftime
 from sys import exit
+from textwrap import dedent
 
 from snakypy.helpers import FG, NONE, printer
 from snakypy.helpers.decorators import denying_os
@@ -29,6 +32,7 @@ from tomlkit.items import Array
 class Base:
     INFO = {
         "name": "Imake",
+        "org": "Snakypy Organization <https://github.com/snakypy>",
         "configuration_file": ".imake",
         "version": "0.1.0a2",
     }
@@ -41,7 +45,7 @@ class Imake(Base):
             self.config_toml = dict(parse(file))
         except FileNotFoundError:
             printer(
-                f'Configuration file does not exist. Create the "{self.INFO["configuration_file"]}" file',
+                f'Configuration file does not exist. Create the "{self.INFO["configuration_file"]}" file.',
                 foreground=FG().ERROR,
             )
             exit(1)
@@ -54,13 +58,15 @@ class Imake(Base):
 
     def menu(self):
 
-        description_package = f"""
+        description_package = dedent(
+            f"""
             {self.INFO["name"]} is a command line tool to simplify commands in Python projects, discarding the
             usability of a Makefile file.
         """
+        )
 
         if len([args for args in self.config_toml]):
-            usage = f"[{', '.join([f'{args} [--desc]' for args in self.config_toml])}, version]"
+            usage = f"[version] [{', '.join([args for args in self.config_toml])} [--desc]]"
             command_help = f"[{FG().BLUE}{', '.join([args for args in self.config_toml])}, version{NONE}]"
         else:
             usage = "[version]"
@@ -69,11 +75,16 @@ class Imake(Base):
         parser = argparse.ArgumentParser(
             description=f"{FG().MAGENTA}{description_package}{NONE}",
             usage=f" imake [-h] {usage}",
+            formatter_class=RawTextHelpFormatter,
+            epilog=f"(c) {strftime('%Y')} - {self.INFO['org']}"
         )
         parser.add_argument(
             "command",
             nargs="?",
-            help=command_help,
+            metavar="",
+            help=dedent(
+                f"""\nOne of these commands must be invoked:\n{command_help}"""
+            ),
         )
         parser.add_argument(
             "--desc",
@@ -98,7 +109,7 @@ def main():
                 if imake.menu().command == args and imake.menu().desc:
                     try:
                         printer(
-                            f"{FG().BLUE}Command description:{NONE}",
+                            f"{FG().BLUE}Description:{NONE}",
                             imake.config_toml[args]["description"],
                             foreground=FG().MAGENTA,
                         )
@@ -115,7 +126,7 @@ def main():
                     try:
                         if not type(imake.config_toml[args]["commands"]) is Array:
                             printer(
-                                'The "commands" key must be an array of commands. Aborted',
+                                'The "commands" key must be an array of commands. Aborted.',
                                 foreground=FG().ERROR,
                             )
                             exit(1)
