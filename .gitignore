@@ -154,4 +154,3 @@ poetry.lock
 # Allow sections.lib folder
 !snakypy/imake/**/*/lib
 imake.toml
-.imake
