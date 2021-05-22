@@ -17,9 +17,10 @@ from argparse import RawTextHelpFormatter
 from contextlib import suppress
 from os import getcwd, system
 from os.path import join
-from time import strftime
+from subprocess import DEVNULL, call
 from sys import exit
 from textwrap import dedent
+from time import strftime
 
 from snakypy.helpers import FG, NONE, printer
 from snakypy.helpers.decorators import denying_os
@@ -66,7 +67,7 @@ class Imake(Base):
         )
 
         if len([args for args in self.config_toml]):
-            usage = f"[version] [{', '.join([args for args in self.config_toml])} [--desc]]"
+            usage = f"[version] [{', '.join([args for args in self.config_toml])} [--desc | --quiet]]"
             command_help = f"[{FG().BLUE}{', '.join([args for args in self.config_toml])}, version{NONE}]"
         else:
             usage = "[version]"
@@ -76,7 +77,7 @@ class Imake(Base):
             description=f"{FG().MAGENTA}{description_package}{NONE}",
             usage=f" imake [-h] {usage}",
             formatter_class=RawTextHelpFormatter,
-            epilog=f"(c) {strftime('%Y')} - {self.INFO['org']}"
+            epilog=f"(c) {strftime('%Y')} - {self.INFO['org']}",
         )
         parser.add_argument(
             "command",
@@ -87,10 +88,18 @@ class Imake(Base):
             ),
         )
         parser.add_argument(
+            "-d",
             "--desc",
             action="store_true",
             default=False,
-            help="show the description (if any) of each command.",
+            help="show the description (if any) of each command",
+        )
+        parser.add_argument(
+            "-q",
+            "--quiet",
+            action="store_true",
+            default=False,
+            help="it does not show the output of the commands",
         )
         args = parser.parse_args()
 
@@ -105,6 +114,8 @@ def main():
         if imake.menu().command == "version":
             printer(f"Version: {FG().CYAN}{imake.INFO['version']}{NONE}")
         else:
+
+            # Show description command
             for args in imake.config_toml:
                 if imake.menu().command == args and imake.menu().desc:
                     try:
@@ -119,10 +130,16 @@ def main():
                             foreground=FG().WARNING,
                         )
                 elif imake.menu().command == args:
+
+                    # Show header message
                     with suppress(NonExistentKey):
-                        printer(
-                            imake.config_toml[args]["header"], foreground=FG().QUESTION
-                        )
+                        if not imake.menu().quiet:
+                            printer(
+                                imake.config_toml[args]["header"],
+                                foreground=FG().QUESTION,
+                            )
+
+                    # Starting commands
                     try:
                         if not type(imake.config_toml[args]["commands"]) is Array:
                             printer(
@@ -131,7 +148,10 @@ def main():
                             )
                             exit(1)
                         for r in imake.config_toml[args]["commands"]:
-                            system(r)
+                            if imake.menu().quiet:
+                                call(r, shell=True, stderr=DEVNULL, stdout=DEVNULL)
+                            else:
+                                system(r)
                     except NonExistentKey:
                         printer(
                             'The configuration file needs the "commands" key. Aborted.',
@@ -139,7 +159,10 @@ def main():
                         )
                         exit(1)
 
+                    # Show finish message
                     with suppress(NonExistentKey):
-                        printer(
-                            imake.config_toml[args]["footer"], foreground=FG().FINISH
-                        )
+                        if not imake.menu().quiet:
+                            printer(
+                                imake.config_toml[args]["footer"],
+                                foreground=FG().FINISH,
+                            )
