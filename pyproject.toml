@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "imake"
-version = "0.1.0"
+version = "0.1.0a2"
 description = ""
 authors = ["William C. Canin <william.costa.canin@gmail.com>"]
 readme = "README.rst"
@@ -9,6 +9,15 @@ keywords=["snakypy", "makefile", "make", "imake"]
 homepage = "https://github.com/snakypy/imake"
 repository = "https://github.com/snakypy/imake"
 include = ["LICENSE"]
+
+classifiers = [
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS",
+    "Operating System :: Unix",
+    "Programming Language :: Python :: 3"
+]
 
 packages = [
     { include = "snakypy" }
