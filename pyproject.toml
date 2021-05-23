@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "imake"
-version = "0.1.0a2"
+version = "0.1.0a3"
 description = ""
 authors = ["William C. Canin <william.costa.canin@gmail.com>"]
 readme = "README.md"
