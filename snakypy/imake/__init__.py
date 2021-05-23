@@ -35,7 +35,7 @@ class Base:
         "name": "Imake",
         "org": "Snakypy Organization <https://github.com/snakypy>",
         "configuration_file": ".imake",
-        "version": "0.1.0a3",
+        "version": "0.1.0",
     }
 
 
