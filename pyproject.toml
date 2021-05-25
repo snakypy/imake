@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "imake"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 authors = ["William C. Canin <william.costa.canin@gmail.com>"]
 readme = "README.md"
@@ -24,7 +24,7 @@ packages = [
 ]
 
 [tool.poetry.scripts]
-imake = "snakypy.imake:main"
+imake = "snakypy.imake:run"
 
 [tool.poetry.dependencies]
 python = "^3.9"
