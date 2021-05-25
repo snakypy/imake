@@ -1,8 +1,8 @@
 """
-Imake
+iMake
 ~~~~~~~~
 
-Imake is a command line tool to simplify commands in Python projects, discarding the
+iMake is a command line tool to simplify commands in Python projects, discarding the
 usability of a Makefile file
 
 
@@ -32,14 +32,14 @@ from tomlkit.items import Array
 
 class Base:
     INFO = {
-        "name": "Imake",
+        "name": "iMake",
         "org": "Snakypy Organization <https://github.com/snakypy>",
         "configuration_file": ".imake",
-        "version": "0.1.0",
+        "version": "0.1.1",
     }
 
 
-class Imake(Base):
+class Main(Base):
     def __init__(self):
         try:
             file = read_file(join(getcwd(), self.INFO["configuration_file"]))
@@ -68,24 +68,23 @@ class Imake(Base):
 
         if len([args for args in self.config_toml]):
             usage = f"[version] [{', '.join([args for args in self.config_toml])} [--desc | --quiet]]"
-            command_help = f"[{FG().BLUE}{', '.join([args for args in self.config_toml])}, version{NONE}]"
+            command_help = f"{{{FG().BLUE}{', '.join([args for args in self.config_toml])}, version{NONE}}}\n" \
+                           f"NOTE: For the description of each command use the --desc option."
         else:
             usage = "[version]"
-            command_help = f"[{FG().BLUE}version{NONE}]"
+            command_help = f"{{{FG().BLUE}version{NONE}}}"
 
         parser = argparse.ArgumentParser(
             description=f"{FG().MAGENTA}{description_package}{NONE}",
-            usage=f" imake [-h] {usage}",
+            usage=f" {self.INFO['name'].lower()} [-h] {usage}",
             formatter_class=RawTextHelpFormatter,
             epilog=f"(c) {strftime('%Y')} - {self.INFO['org']}",
         )
         parser.add_argument(
             "command",
             nargs="?",
-            metavar="",
-            help=dedent(
-                f"""\nOne of these commands must be invoked:\n{command_help}"""
-            ),
+            metavar="command",
+            help=f"Usage: {command_help}",
         )
         parser.add_argument(
             "-d",
@@ -107,21 +106,25 @@ class Imake(Base):
 
 
 @denying_os("nt")
-def main():
+def run():
     with suppress(TypeError):
-        imake = Imake()
-
-        if imake.menu().command == "version":
-            printer(f"Version: {FG().CYAN}{imake.INFO['version']}{NONE}")
+        if Main().menu().command == "version":
+            printer(f"Version: {FG().CYAN}{Main().INFO['version']}{NONE}")
         else:
 
             # Show description command
-            for args in imake.config_toml:
-                if imake.menu().command == args and imake.menu().desc:
+            for args in Main().config_toml:
+                if Main().menu().command not in Main().config_toml:
+                    printer(
+                        f'Option "{Main().menu().command}" invalid. I can\'t find the configuration file.',
+                        foreground=FG().WARNING,
+                    )
+                    exit(1)
+                if Main().menu().command == args and Main().menu().desc:
                     try:
                         printer(
                             f"{FG().BLUE}Description:{NONE}",
-                            imake.config_toml[args]["description"],
+                            Main().config_toml[args]["description"],
                             foreground=FG().MAGENTA,
                         )
                     except NonExistentKey:
@@ -129,26 +132,26 @@ def main():
                             "There is no description of this command.",
                             foreground=FG().WARNING,
                         )
-                elif imake.menu().command == args:
+                elif Main().menu().command == args:
 
                     # Show header message
                     with suppress(NonExistentKey):
-                        if not imake.menu().quiet:
+                        if not Main().menu().quiet:
                             printer(
-                                imake.config_toml[args]["header"],
+                                Main().config_toml[args]["header"],
                                 foreground=FG().QUESTION,
                             )
 
                     # Starting commands
                     try:
-                        if not type(imake.config_toml[args]["commands"]) is Array:
+                        if not type(Main().config_toml[args]["commands"]) is Array:
                             printer(
                                 'The "commands" key must be an array of commands. Aborted.',
                                 foreground=FG().ERROR,
                             )
                             exit(1)
-                        for r in imake.config_toml[args]["commands"]:
-                            if imake.menu().quiet:
+                        for r in Main().config_toml[args]["commands"]:
+                            if Main().menu().quiet:
                                 call(r, shell=True, stderr=DEVNULL, stdout=DEVNULL)
                             else:
                                 system(r)
@@ -161,8 +164,8 @@ def main():
 
                     # Show finish message
                     with suppress(NonExistentKey):
-                        if not imake.menu().quiet:
+                        if not Main().menu().quiet:
                             printer(
-                                imake.config_toml[args]["footer"],
+                                Main().config_toml[args]["footer"],
                                 foreground=FG().FINISH,
                             )
