@@ -57,7 +57,7 @@ class Main(Base):
             )
             exit(1)
 
-    def menu(self):
+    def menu(self) -> argparse.Namespace:
 
         description_package = dedent(
             f"""
@@ -68,8 +68,10 @@ class Main(Base):
 
         if len([args for args in self.config_toml]):
             usage = f"[version] [{', '.join([args for args in self.config_toml])} [--desc | --quiet]]"
-            command_help = f"{{{FG().BLUE}{', '.join([args for args in self.config_toml])}, version{NONE}}}\n" \
-                           f"NOTE: For the description of each command use the --desc option."
+            command_help = (
+                f"{{{FG().BLUE}{', '.join([args for args in self.config_toml])}, version{NONE}}}\n"
+                f"NOTE: For the description of each command use the --desc option."
+            )
         else:
             usage = "[version]"
             command_help = f"{{{FG().BLUE}version{NONE}}}"
