@@ -25,7 +25,7 @@ from typing import Union
 
 from snakypy.helpers import FG, NONE, printer
 from snakypy.helpers.decorators import denying_os
-from snakypy.helpers.files import read_file
+from snakypy.helpers.files import create_file, read_file
 from tomlkit import parse
 from tomlkit.exceptions import NonExistentKey, ParseError
 from tomlkit.items import Array
@@ -61,6 +61,17 @@ class Main(Base):
                 foreground=FG().ERROR,
             )
             exit(1)
+
+    def create_base_config(self) -> None:
+        if not exists(self.INFO["configuration_file"]):
+            content = '[]\ndescription = ""\ninitial_message = ""\ncommands = []\nfinal_message = ""\n'
+            create_file(content, self.INFO["configuration_file"])
+            printer(
+                f'File "{self.INFO["configuration_file"]}" created in this directory successfully.',
+                foreground=FG().FINISH,
+            )
+        else:
+            printer("Configuration file already exists.", foreground=FG().WARNING)
 
     def menu(self, config_toml: dict) -> argparse.Namespace:
 
@@ -123,6 +134,8 @@ def run():
 
         if menu.command == "version":
             printer(f"Version: {FG().CYAN}{Main().INFO['version']}{NONE}")
+        elif menu.command == "init":
+            Main().create_base_config()
         else:
 
             # Get configuration
