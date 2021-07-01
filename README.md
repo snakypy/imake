@@ -51,12 +51,12 @@ $ pip install imake --user
 
 ## Configuration
 
-The configuration file must exist at the location where **imake** will be called. The file must be named **.imake **, that is, a file hidden on Unix systems.
+The configuration file must exist at the location where **imake** will be called. The file must be named **.imake**, that is, a file hidden on Unix systems.
 
-To create the file use `touch`:
+To create the file use command:
 
 ```shell
-$ touch .imake
+imake init
 ```
 
 After creating the file, you should leave it with the following structure. Example:
@@ -88,7 +88,7 @@ commands = ["""
 """]
 ```
 
-**iMake** settings still have 3 other keys, which are **description**, **header**, and **footer**. All optional.
+**iMake** settings still have 3 other keys, which are **description**, **initial_message**, and **final_message**. All optional.
 
 The key **description** you must put only a description for a given command. Example:
 
@@ -98,23 +98,23 @@ description = "This command compiles the project."
 commands = ["rm -rf build", "rm -rf docs/_build;", "python setup.py sdist"]
 ```
 
-The **header** key is a message that will appear before the commands start. Example:
+The **initial_message** key is a message that will appear before the commands start. Example:
 
 ```toml
 [build]
 description = "This command compiles the project."
-header = "Starting the build ..."
+initial_message = "Starting the build ..."
 commands = ["rm -rf build", "rm -rf docs/_build;", "python setup.py sdist"]
 ```
 
-The **footer** key is a message that will appear after the commands are finished. Example:
+The **final_message** key is a message that will appear after the commands are finished. Example:
 
 ```toml
 [build]
 description = "This command compiles the project."
-header = "Starting the build ..."
+initial_message = "Starting the build ..."
 commands = ["rm -rf build", "rm -rf docs/_build;", "python setup.py sdist"]
-footer = "Build command finished!"
+final_message = "Build command finished!"
 ```
 
 > Note: The position of the keys does not imply anything, but the values do. The command that you put first in the **commands** key will be the first to be executed.
@@ -124,9 +124,9 @@ Another interesting option is that you can call the execution of a command withi
 ```toml
 [build]
 description = "This command compiles the project."
-header = "Starting the build ..."
+initial_message = "Starting the build ..."
 commands = ["imake clean -q", "python setup.py sdist"]
-footer = "Build command finished!"
+final_message = "Build command finished!"
 ```
 
 Notice that the command **imake clean -q** is inside **commands**. Where the `-q` option means to silence verbose mode.
@@ -142,7 +142,7 @@ $ imake build
 You can run the help command, `imake -h` to show which commands are available to you. Any configuration that is in the **.imake** file will be shown in `help`, minus the description of each command, which will be shown only if you run the `--desc` or `-d` option, for example:
 
 ```shell
-$ imake build --desc 
+$ imake build --desc
 ```
 
  ## More Commands
@@ -159,7 +159,7 @@ Click on the image below to be redirected the donation forms:
 
 <div class="donate">
   <a href="https://github.com/snakypy/donations/blob/master/README.md">
-    <img width="160" height="100" src="https://raw.githubusercontent.com/snakypy/donations/master/svg/donate/donate-hand.svg" alt="Donations"
+    <img width="160" height="100" src="https://raw.githubusercontent.com/snakypy/donations/master/svg/donate/donate-hand.svg" alt="Donations"/>
   </a>
 </div>
 
