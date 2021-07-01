@@ -16,15 +16,16 @@ import argparse
 from argparse import RawTextHelpFormatter
 from contextlib import suppress
 from os import getcwd, system
-from os.path import join
+from os.path import exists, join
 from subprocess import DEVNULL, call
 from sys import exit
 from textwrap import dedent
 from time import strftime
+from typing import Union
 
 from snakypy.helpers import FG, NONE, printer
 from snakypy.helpers.decorators import denying_os
-from snakypy.helpers.files import read_file
+from snakypy.helpers.files import create_file, read_file
 from tomlkit import parse
 from tomlkit.exceptions import NonExistentKey, ParseError
 from tomlkit.items import Array
@@ -35,18 +36,22 @@ class Base:
         "name": "iMake",
         "org": "Snakypy Organization <https://github.com/snakypy>",
         "configuration_file": ".imake",
-        "version": "0.1.2",
+        "version": "0.2.0",
     }
 
 
 class Main(Base):
     def __init__(self):
+        Base.__init__(self)
+
+    @staticmethod
+    def load_conf() -> Union[dict, None]:
         try:
-            file = read_file(join(getcwd(), self.INFO["configuration_file"]))
-            self.config_toml = dict(parse(file))
+            file = read_file(join(getcwd(), Main().INFO["configuration_file"]))
+            return dict(parse(file))
         except FileNotFoundError:
             printer(
-                f'Configuration file does not exist. Create the "{self.INFO["configuration_file"]}" file.',
+                f'Configuration file does not exist. Create the "{Main().INFO["configuration_file"]}" file.',
                 foreground=FG().ERROR,
             )
             exit(1)
@@ -57,7 +62,18 @@ class Main(Base):
             )
             exit(1)
 
-    def menu(self) -> argparse.Namespace:
+    def create_base_config(self) -> None:
+        if not exists(self.INFO["configuration_file"]):
+            content = '[]\ndescription = ""\ninitial_message = ""\ncommands = []\nfinal_message = ""\n'
+            create_file(content, self.INFO["configuration_file"])
+            printer(
+                f'File "{self.INFO["configuration_file"]}" created in this directory successfully.',
+                foreground=FG().FINISH,
+            )
+        else:
+            printer("Configuration file already exists.", foreground=FG().WARNING)
+
+    def menu(self, config_toml: dict) -> argparse.Namespace:
 
         description_package = dedent(
             f"""
@@ -66,15 +82,15 @@ class Main(Base):
         """
         )
 
-        if len([args for args in self.config_toml]):
-            usage = f"[version] [{', '.join([args for args in self.config_toml])} [--desc | --quiet]]"
+        if len([args for args in config_toml]):
+            usage = f"[init, version] [{', '.join([args for args in config_toml])} [--desc | --quiet]]"
             command_help = (
-                f"{{{FG().BLUE}{', '.join([args for args in self.config_toml])}, version{NONE}}}\n"
+                f"{{{FG().BLUE}{', '.join([args for args in config_toml])}, init, version{NONE}}}\n"
                 f"NOTE: For the description of each command use the --desc option."
             )
         else:
-            usage = "[version]"
-            command_help = f"{{{FG().BLUE}version{NONE}}}"
+            usage = "[init, version]"
+            command_help = f"{{{FG().BLUE}init, version{NONE}}}"
 
         parser = argparse.ArgumentParser(
             description=f"{FG().MAGENTA}{description_package}{NONE}",
@@ -110,23 +126,34 @@ class Main(Base):
 @denying_os("nt")
 def run():
     with suppress(TypeError):
-        if Main().menu().command == "version":
+
+        if exists(Main().INFO["configuration_file"]):
+            menu = Main().menu(Main().load_conf())
+        else:
+            menu = Main().menu({})
+
+        if menu.command == "version":
             printer(f"Version: {FG().CYAN}{Main().INFO['version']}{NONE}")
+        elif menu.command == "init":
+            Main().create_base_config()
         else:
 
+            # Get configuration
+            config_toml = Main().load_conf()
+
             # Show description command
-            for args in Main().config_toml:
-                if Main().menu().command not in Main().config_toml:
+            for args in config_toml:
+                if menu.command not in config_toml:
                     printer(
-                        f'Option "{Main().menu().command}" invalid. I can\'t find the configuration file.',
+                        f'Option "{menu.command}" invalid. I can\'t find the configuration file.',
                         foreground=FG().WARNING,
                     )
                     exit(1)
-                if Main().menu().command == args and Main().menu().desc:
+                if menu.command == args and menu.desc:
                     try:
                         printer(
                             f"{FG().BLUE}Description:{NONE}",
-                            Main().config_toml[args]["description"],
+                            config_toml[args]["description"],
                             foreground=FG().MAGENTA,
                         )
                     except NonExistentKey:
@@ -134,26 +161,26 @@ def run():
                             "There is no description of this command.",
                             foreground=FG().WARNING,
                         )
-                elif Main().menu().command == args:
+                elif menu.command == args:
 
                     # Show header message
                     with suppress(NonExistentKey):
-                        if not Main().menu().quiet:
+                        if not menu.quiet:
                             printer(
-                                Main().config_toml[args]["header"],
+                                config_toml[args]["initial_message"],
                                 foreground=FG().QUESTION,
                             )
 
                     # Starting commands
                     try:
-                        if not type(Main().config_toml[args]["commands"]) is Array:
+                        if not type(config_toml[args]["commands"]) is Array:
                             printer(
                                 'The "commands" key must be an array of commands. Aborted.',
                                 foreground=FG().ERROR,
                             )
                             exit(1)
-                        for r in Main().config_toml[args]["commands"]:
-                            if Main().menu().quiet:
+                        for r in config_toml[args]["commands"]:
+                            if menu.quiet:
                                 call(r, shell=True, stderr=DEVNULL, stdout=DEVNULL)
                             else:
                                 system(r)
@@ -166,8 +193,8 @@ def run():
 
                     # Show finish message
                     with suppress(NonExistentKey):
-                        if not Main().menu().quiet:
+                        if not menu.quiet:
                             printer(
-                                Main().config_toml[args]["footer"],
+                                config_toml[args]["final_message"],
                                 foreground=FG().FINISH,
                             )
