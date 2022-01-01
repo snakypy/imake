@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "imake"
-version = "0.2.0"
+version = "0.3.0"
 description = "iMake is a command line tool to simplify commands in Python projects, discarding the usability of a Makefile file."
 authors = ["William C. Canin <william.costa.canin@gmail.com>"]
 readme = "README.md"
@@ -29,7 +29,7 @@ imake = "snakypy.imake:run"
 [tool.poetry.dependencies]
 python = "^3.9"
 tomlkit = "^0.7.2"
-snakypy-helpers = "^0.2.1"
+snakypy-helpers = "^0.3.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2"
