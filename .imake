@@ -22,7 +22,7 @@ initial_message = "Starting tests with Tox ..."
 commands = ["poetry run tox"]
 final_message = "Test command terminated!"
 
-[check]
+[linters]
 description = "Checks if the project structure is in accordance with certain linters."
 initial_message = "Checking project structure with linters ..."
 commands = ["""
