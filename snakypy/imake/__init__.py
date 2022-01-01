@@ -123,7 +123,7 @@ class Main(Base):
         return args
 
 
-@denying_os("nt")
+@denying_os("Windows")
 def run():
     with suppress(TypeError):
 
